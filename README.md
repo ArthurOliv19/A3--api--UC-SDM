@@ -6,6 +6,7 @@ Usamos as seguintes tecnologias:
 - MySQL
 - Postman / Insomnia / Navegador (para testes)
 - GitHub
+
 Para rodar, tenha node instalado e mysql ( esse último também pode ser usado via xampp)
 *clone esse repositório, ou copie e cole arquivo por arquivo em seu PC*
 É importante instalar também o 'npm install'
