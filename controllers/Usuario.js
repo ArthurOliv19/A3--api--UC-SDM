@@ -1,5 +1,6 @@
 const db = require('../banco');
 
+
 exports.listarUsuarios = (req, res) => {
   db.query('SELECT * FROM usuarios', (err, results) => {
     if (err) throw err;
@@ -10,15 +11,19 @@ exports.listarUsuarios = (req, res) => {
   });
 };
 
+
 exports.buscarUsuarioPorId = (req, res) => {
-  db.query('SELECT * FROM usuarios WHERE id = ?', [req.params.id], (err, results) => {
-    if (err) throw err;
+  const id = req.params.id;
+  db.query('SELECT * FROM usuarios WHERE id = ?', [id], (err, resultados) => {
+    if (err) return res.status(500).json({ erro: err.message });
+    if (resultados.length === 0) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
     res.json({
       mensagem: 'Aqui está o usuário que você pediu',
-      dados: results[0]
+      dados: resultados[0]
     });
   });
 };
+
 
 exports.criarUsuario = (req, res) => {
   db.query('INSERT INTO usuarios (nome) VALUES (?)', [req.body.nome], (err, result) => {
@@ -30,20 +35,29 @@ exports.criarUsuario = (req, res) => {
   });
 };
 
+
 exports.atualizarUsuario = (req, res) => {
-  db.query('UPDATE usuarios SET nome = ? WHERE id = ?', [req.body.nome, req.params.id], () => {
+  const id = req.params.id;
+  const { nome } = req.body;
+  db.query('UPDATE usuarios SET nome = ? WHERE id = ?', [nome, id], (err) => {
+    if (err) return res.status(500).json({ erro: err.message });
     res.json({ mensagem: 'Usuário atualizado com sucesso!' });
   });
 };
 
+
 exports.atualizarParcialUsuario = (req, res) => {
-  db.query('UPDATE usuarios SET nome = ? WHERE id = ?', [req.body.nome, req.params.id], () => {
+  db.query('UPDATE usuarios SET nome = ? WHERE id = ?', [req.body.nome, req.params.id], (err) => {
+    if (err) return res.status(500).json({ erro: err.message });
     res.json({ mensagem: 'Nome do usuário alterado com sucesso!' });
   });
 };
 
+
 exports.deletarUsuario = (req, res) => {
-  db.query('DELETE FROM usuarios WHERE id = ?', [req.params.id], () => {
+  const id = req.params.id;
+  db.query('DELETE FROM usuarios WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ erro: err.message });
     res.json({ mensagem: 'Usuário removido com sucesso!' });
   });
 };
