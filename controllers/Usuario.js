@@ -1,9 +1,9 @@
 const db = require('../banco');
 
-
+/* LISTAR TODOS */
 exports.listarUsuarios = (req, res) => {
   db.query('SELECT * FROM usuarios', (err, results) => {
-    if (err) throw err;
+    if (err) return res.status(500).json({ erro: err.message });
     res.json({
       mensagem: 'Aqui estão todos os usuários cadastrados',
       dados: results
@@ -11,49 +11,91 @@ exports.listarUsuarios = (req, res) => {
   });
 };
 
-
+/*  BUSCAR POR ID */
 exports.buscarUsuarioPorId = (req, res) => {
   const id = req.params.id;
-  db.query('SELECT * FROM usuarios WHERE id = ?', [id], (err, resultados) => {
+  db.query('SELECT * FROM usuarios WHERE id = ?', [id], (err, results) => {
     if (err) return res.status(500).json({ erro: err.message });
-    if (resultados.length === 0) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
+    if (results.length === 0)
+      return res.status(404).json({ mensagem: 'Usuário não encontrado' });
     res.json({
       mensagem: 'Aqui está o usuário que você pediu',
-      dados: resultados[0]
+      dados: results[0]
     });
   });
 };
 
-
+/*  CRIAR USUÁRIO  */
 exports.criarUsuario = (req, res) => {
-  db.query('INSERT INTO usuarios (nome) VALUES (?)', [req.body.nome], (err, result) => {
-    if (err) throw err;
-    res.json({
-      mensagem: 'Usuário cadastrado com sucesso!',
-      id: result.insertId
-    });
-  });
+  const { nome, sobrenome } = req.body;
+  if (!nome || !sobrenome) {
+    return res
+      .status(400)
+      .json({ mensagem: 'Nome e sobrenome são obrigatórios' });
+  }
+
+  db.query(
+    'INSERT INTO usuarios (nome, sobrenome) VALUES (?, ?)',
+    [nome, sobrenome],
+    (err, result) => {
+      if (err) return res.status(500).json({ erro: err.message });
+      res.json({
+        mensagem: 'Usuário cadastrado com sucesso!',
+        id: result.insertId
+      });
+    }
+  );
 };
 
-
+/*   ATUALIZAÇÃO TOTAL  */
 exports.atualizarUsuario = (req, res) => {
-  const id = req.params.id;
-  const { nome } = req.body;
-  db.query('UPDATE usuarios SET nome = ? WHERE id = ?', [nome, id], (err) => {
-    if (err) return res.status(500).json({ erro: err.message });
-    res.json({ mensagem: 'Usuário atualizado com sucesso!' });
-  });
+  const { nome, sobrenome } = req.body;
+  if (!nome || !sobrenome) {
+    return res
+      .status(400)
+      .json({ mensagem: 'Nome e sobrenome são obrigatórios para PUT.' });
+  }
+
+  db.query(
+    'UPDATE usuarios SET nome = ?, sobrenome = ? WHERE id = ?',
+    [nome, sobrenome, req.params.id],
+    (err) => {
+      if (err) return res.status(500).json({ erro: err.message });
+      res.json({ mensagem: 'Usuário atualizado com sucesso (PUT)' });
+    }
+  );
 };
 
-
+/*   ATUALIZAÇÃO PARCIAL  */
 exports.atualizarParcialUsuario = (req, res) => {
-  db.query('UPDATE usuarios SET nome = ? WHERE id = ?', [req.body.nome, req.params.id], (err) => {
+  const { nome, sobrenome } = req.body;
+  const campos = [];
+  const valores = [];
+
+  if (nome) {
+    campos.push('nome = ?');
+    valores.push(nome);
+  }
+  if (sobrenome) {
+    campos.push('sobrenome = ?');
+    valores.push(sobrenome);
+  }
+  if (campos.length === 0) {
+    return res
+      .status(400)
+      .json({ mensagem: 'Nenhum dado enviado para atualização.' });
+  }
+
+  valores.push(req.params.id);
+  const sql = `UPDATE usuarios SET ${campos.join(', ')} WHERE id = ?`;
+
+  db.query(sql, valores, (err) => {
     if (err) return res.status(500).json({ erro: err.message });
-    res.json({ mensagem: 'Nome do usuário alterado com sucesso!' });
+    res.json({ mensagem: 'Usuário atualizado com sucesso (PATCH)' });
   });
 };
 
-
+/*  DELETAR USUÁRIO  */
 exports.deletarUsuario = (req, res) => {
   const id = req.params.id;
   db.query('DELETE FROM usuarios WHERE id = ?', [id], (err) => {
@@ -61,3 +103,4 @@ exports.deletarUsuario = (req, res) => {
     res.json({ mensagem: 'Usuário removido com sucesso!' });
   });
 };
+
