@@ -4,7 +4,7 @@ Usamos as seguintes tecnologias:
 - Node.js
 - Express
 - MySQL
-- Postman / Insomnia / Navegador (para testes)
+- Postman / Navegador (para testes)
 - GitHub
 
 Para rodar, tenha node instalado e mysql (esse último também pode ser usado via xampp)
