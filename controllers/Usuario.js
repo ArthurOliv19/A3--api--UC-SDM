@@ -53,7 +53,7 @@ exports.atualizarUsuario = (req, res) => {
   if (!nome || !sobrenome) {
     return res
       .status(400)
-      .json({ mensagem: 'Nome e sobrenome são obrigatórios para PUT.' });
+      .json({ mensagem: 'Nome e sobrenome são obrigatórios !' });
   }
 
   db.query(
@@ -61,7 +61,7 @@ exports.atualizarUsuario = (req, res) => {
     [nome, sobrenome, req.params.id],
     (err) => {
       if (err) return res.status(500).json({ erro: err.message });
-      res.json({ mensagem: 'Usuário atualizado com sucesso (PUT)' });
+      res.json({ mensagem: 'Usuário atualizado com sucesso ' });
     }
   );
 };
