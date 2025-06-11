@@ -91,7 +91,7 @@ exports.atualizarParcialUsuario = (req, res) => {
 
   db.query(sql, valores, (err) => {
     if (err) return res.status(500).json({ erro: err.message });
-    res.json({ mensagem: 'Usuário atualizado com sucesso (PATCH)' });
+     res.json({ mensagem: 'Usuário atualizado com sucesso !' });
   });
 };
 
