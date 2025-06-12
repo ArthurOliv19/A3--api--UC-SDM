@@ -1,6 +1,6 @@
 const db = require('../banco');
 
-/* LISTAR TODOS */
+
 exports.listarUsuarios = (req, res) => {
   db.query('SELECT * FROM usuarios', (err, results) => {
     if (err) return res.status(500).json({ erro: err.message });
@@ -11,7 +11,7 @@ exports.listarUsuarios = (req, res) => {
   });
 };
 
-/*  BUSCAR POR ID */
+
 exports.buscarUsuarioPorId = (req, res) => {
   const id = req.params.id;
   db.query('SELECT * FROM usuarios WHERE id = ?', [id], (err, results) => {
@@ -25,7 +25,7 @@ exports.buscarUsuarioPorId = (req, res) => {
   });
 };
 
-/*  CRIAR USUÁRIO  */
+
 exports.criarUsuario = (req, res) => {
   const { nome, sobrenome } = req.body;
   if (!nome || !sobrenome) {
@@ -47,7 +47,7 @@ exports.criarUsuario = (req, res) => {
   );
 };
 
-/*   ATUALIZAÇÃO TOTAL  */
+
 exports.atualizarUsuario = (req, res) => {
   const { nome, sobrenome } = req.body;
   if (!nome || !sobrenome) {
@@ -66,7 +66,7 @@ exports.atualizarUsuario = (req, res) => {
   );
 };
 
-/*   ATUALIZAÇÃO PARCIAL  */
+
 exports.atualizarParcialUsuario = (req, res) => {
   const { nome, sobrenome } = req.body;
   const campos = [];
@@ -95,7 +95,7 @@ exports.atualizarParcialUsuario = (req, res) => {
   });
 };
 
-/*  DELETAR USUÁRIO  */
+
 exports.deletarUsuario = (req, res) => {
   const id = req.params.id;
   db.query('DELETE FROM usuarios WHERE id = ?', [id], (err) => {
