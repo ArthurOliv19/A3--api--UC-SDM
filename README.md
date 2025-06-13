@@ -7,13 +7,13 @@ Usamos as seguintes tecnologias:
 - Postman / Navegador (para testes)
 - GitHub
 
-Para rodar, tenha node instalado e mysql (esse último também pode ser usado via xampp)
+Para rodar, tenha node instalado, e rode com apache e mysql (também podem ser usados via xampp)
 
 *clone esse repositório, ou copie e cole arquivo por arquivo em seu PC*
 
-É importante instalar também o 'npm install'
+É importante instalar também o 'npm install' (via terminal windows ou terminal VScode na pasta do arquivo)
 
-Rode a API com 'node index.js'
+Rode a API com 'node index.js' ( via terminal windows, powershell windows ou terminal VScode na pasta do arquivo)
 
 
 Nossa API tem os seguintes endpoints:
